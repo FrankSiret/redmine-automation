@@ -30,6 +30,9 @@ npm install
 Create a `.env` file in the project root with:
 
 ```env
+# Redmine instance URL (no trailing slash)
+REDMINE_URL=https://www.redmine.org
+
 # Redmine credentials
 REDMINE_API_KEY=your_redmine_api_key
 
@@ -73,7 +76,6 @@ The script will:
 ## 📝 Example Output
 
 ```bash
-dotenv config loaded { ... }
 Creating time entry for date: 2025-08-01
 Issue created: { "time_entry": { "id": 101, ... } }
 Creating time entry for date: 2025-08-04

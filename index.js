@@ -3,10 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log('dotenv config loaded', process.env);
-
-const REDMINE_URL = 'http://management.peoplewalking.com';
-
 // dates between from and to, inclusive, with format YYYY-MM-DD and do not include weekends
 const getDates = (from, to) => {
     const dates = [];
@@ -34,7 +30,7 @@ const createIssue = async (date) => {
             comments: process.env.REDMINE_COMMENTS           // Optional comments
         };
         const response = await axios.post(
-            `${REDMINE_URL}/time_entries.json`,
+            `${process.env.REDMINE_URL}/time_entries.json`,
             { time_entry },
             {
                 headers: {
