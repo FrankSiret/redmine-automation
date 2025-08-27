@@ -80,37 +80,3 @@ Creating time entry for date: 2025-08-04
 Issue created: { "time_entry": { "id": 102, ... } }
 ...
 ```
-
----
-
-## 🔧 Customization
-
-* **Activity ID**:
-  The script uses `activity_id: 9`. To list available activities, call:
-
-  ```
-  GET /enumerations/time_entry_activities.json
-  ```
-
-  and update the script accordingly.
-
-* **Project vs Issue**:
-  If you want to log time against a **project** instead of a task, replace:
-
-  ```js
-  issue_id: process.env.REDMINE_TASK_ID
-  ```
-
-  with
-
-  ```js
-  project_id: process.env.REDMINE_PROJECT_ID
-  ```
-
----
-
-✅ That’s it! You can now auto-log time entries in Redmine with just one script.
-
----
-
-Would you like me to also add a **section with a cron example** so this can run automatically every day?
