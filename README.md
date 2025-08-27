@@ -7,8 +7,9 @@ This Node.js script automates creating **Redmine time entries** across a date ra
 ## 📦 Requirements
 
 * Node.js 18+
-* A [Redmine API key](https://www.redmine.org/projects/redmine/wiki/Rest_api#Authentication)
-* A `.env` file configured with the required variables
+* Access to your Redmine instance
+* A Redmine API key (explained below)
+* A `.env` file with your configuration
 
 ---
 
@@ -22,6 +23,22 @@ cd redmine-automation
 # Install dependencies
 npm install
 ```
+
+---
+
+## 🔑 How to Get Your Redmine API Key
+
+1. Log in to your Redmine account in the browser.
+2. Go to **My Account** (usually in the top-right menu).
+3. Scroll down to the section **API access key**.
+
+   * If no key is displayed, click **Show** or **Generate** to create one.
+4. Copy the key — it looks like a long hex string, e.g.:
+
+   ```
+   4b92a4c93acddfd7d7f6d3e15b5c9f15a32d12aa
+   ```
+5. Paste it into your `.env` file as `REDMINE_API_KEY`.
 
 ---
 
