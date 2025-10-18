@@ -3,18 +3,28 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Use UTC-only operations to avoid local timezone conversions impacting comparisons
+const parseDateOnlyToUTC = (dateStr) => {
+    // expecting YYYY-MM-DD
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return new Date(Date.UTC(y, m - 1, d));
+};
+
+const formatDateOnlyFromUTC = (date) => date.toISOString().slice(0, 10);
+
 // dates between from and to, inclusive, with format YYYY-MM-DD and do not include weekends
 const getDates = (from, to) => {
     const dates = [];
-    const currentDate = new Date(from);
-    const endDate = new Date(to);
+    const currentDate = parseDateOnlyToUTC(from);
+    const endDate = parseDateOnlyToUTC(to);
 
-    while (currentDate <= endDate) {
-        const day = currentDate.getDay();
+    // iterate using UTC methods so time zone doesn't shift the day
+    while (currentDate.getTime() <= endDate.getTime()) {
+        const day = currentDate.getUTCDay();
         if (day !== 0 && day !== 6) {
-            dates.push(currentDate.toISOString().split('T')[0]);
+            dates.push(formatDateOnlyFromUTC(currentDate));
         }
-        currentDate.setDate(currentDate.getDate() + 1);
+        currentDate.setUTCDate(currentDate.getUTCDate() + 1);
     }
     return dates;
 }
