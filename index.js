@@ -3,6 +3,21 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+const assertEnv = () => {
+  const requiredVars = [
+    "REDMINE_API_KEY",
+    "REDMINE_URL",
+    "REDMINE_TASK_ID",
+    "REDMINE_FROM_DATE",
+    "REDMINE_TO_DATE",
+  ];
+  requiredVars.forEach((varName) => {
+    if (!process.env[varName]) {
+      throw new Error(`Missing required environment variable: ${varName}`);
+    }
+  });
+};
+
 // helper to interpret environment truthy values
 const isTruthy = (v) => typeof v === "string" && v.toLowerCase() === "true";
 const REPLACE_EXISTING = isTruthy(process.env.REDMINE_REPLACE_EXISTING || "");
@@ -124,8 +139,11 @@ const findIssues = async () => {
   }
 };
 
-const issues = await findIssues();
+const main = async () => {
+  assertEnv();
+  const issues = await findIssues();
+  await createIssues(issues);
+  console.log("Done");
+};
 
-await createIssues(issues);
-
-console.log("Done");
+main();
