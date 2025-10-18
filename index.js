@@ -47,7 +47,7 @@ const createIssues = async (issues) => {
             const time_entry = {
                 issue_id: process.env.REDMINE_TASK_ID,           // Or project_id instead of issue_id
                 hours: +process.env.REDMINE_HOURS || 8,          // Hours spent
-                activity_id: 9,                                  // ID of the activity (e.g., Development)
+                activity_id: +(process.env.REDMINE_ACTIVITY_ID || 9), // ID of the activity (e.g., Development)
                 spent_on: date,                                  // Date of the time entry (YYYY-MM-DD)
                 comments: process.env.REDMINE_COMMENTS           // Optional comments
             };

@@ -65,6 +65,10 @@ REDMINE_COMMENTS=Worked on feature implementation
 # Date range (inclusive, format YYYY-MM-DD)
 REDMINE_FROM_DATE=2025-08-01
 REDMINE_TO_DATE=2025-08-15
+
+# Redmine activity ID to use for time entries (optional)
+# If omitted the script defaults to 9 (commonly "Development").
+REDMINE_ACTIVITY_ID=9
 ```
 
 ---
