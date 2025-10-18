@@ -6,10 +6,10 @@ This Node.js script automates creating **Redmine time entries** across a date ra
 
 ## 📦 Requirements
 
-* Node.js 18+
-* Access to your Redmine instance
-* A Redmine API key (explained below)
-* A `.env` file with your configuration
+- Node.js 18+
+- Access to your Redmine instance
+- A Redmine API key (explained below)
+- A `.env` file with your configuration
 
 ---
 
@@ -32,12 +32,14 @@ npm install
 2. Go to **My Account** (usually in the top-right menu).
 3. Scroll down to the section **API access key**.
 
-   * If no key is displayed, click **Show** or **Generate** to create one.
+   - If no key is displayed, click **Show** or **Generate** to create one.
+
 4. Copy the key — it looks like a long hex string, e.g.:
 
    ```
    4b92a4c93acddfd7d7f6d3e15b5c9f15a32d12aa
    ```
+
 5. Paste it into your `.env` file as `REDMINE_API_KEY`.
 
 ---
@@ -86,11 +88,11 @@ The script will:
 1. Generate all weekdays between `REDMINE_FROM_DATE` and `REDMINE_TO_DATE`.
 2. For each date, create a **time entry** in Redmine with:
 
-   * `issue_id` (or project\_id if adapted)
-   * `hours` worked
-   * `activity_id` (set to `9` in the script, usually “Development”)
-   * `comments` (if provided)
-   * `spent_on` date
+   - `issue_id` (or project_id if adapted)
+   - `hours` worked
+   - `activity_id` (set to `9` in the script, usually “Development”)
+   - `comments` (if provided)
+   - `spent_on` date
 
 ---
 
