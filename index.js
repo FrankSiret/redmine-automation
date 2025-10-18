@@ -6,6 +6,9 @@ dotenv.config();
 // Use UTC-only operations to avoid local timezone conversions impacting comparisons
 const parseDateOnlyToUTC = (dateStr) => {
     // expecting YYYY-MM-DD
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        throw new Error(`Invalid date format: "${dateStr}". Expected YYYY-MM-DD.`);
+    }
     const [y, m, d] = dateStr.split('-').map(Number);
     return new Date(Date.UTC(y, m - 1, d));
 };
@@ -34,10 +37,10 @@ const createIssues = async (issues) => {
     const from = process.env.REDMINE_FROM_DATE;
     const to = process.env.REDMINE_TO_DATE;
     const dates = getDates(from, to);
-    dates.forEach(async date => {
+    for (const date of dates) {
         if (issues?.time_entries?.find(entry => entry.spent_on === date)) {
             console.log(`Time entry for date ${date} already exists. Skipping...`);
-            return;
+            continue;
         }
         console.log('Creating time entry for date:', date);
         try {
@@ -62,7 +65,7 @@ const createIssues = async (issues) => {
         } catch (err) {
             console.error("Error:", err.response?.data || err.message);
         }
-    });
+    }
 }
 
 // Find times entry between from and to dates
