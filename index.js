@@ -3,6 +3,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// helper to interpret environment truthy values
+const isTruthy = (v) => typeof v === "string" && v.toLowerCase() === "true";
+const REPLACE_EXISTING = isTruthy(process.env.REDMINE_REPLACE_EXISTING || "");
+
 // Use UTC-only operations to avoid local timezone conversions impacting comparisons
 const parseDateOnlyToUTC = (dateStr) => {
   // expecting YYYY-MM-DD
@@ -38,10 +42,40 @@ const createIssues = async (issues) => {
   const to = process.env.REDMINE_TO_DATE;
   const dates = getDates(from, to);
   for (const date of dates) {
-    if (issues?.time_entries?.find((entry) => entry.spent_on === date)) {
+    const existingEntries =
+      issues?.time_entries?.filter((entry) => entry.spent_on === date) || [];
+
+    if (existingEntries.length > 0 && !REPLACE_EXISTING) {
       console.log(`Time entry for date ${date} already exists. Skipping...`);
       continue;
     }
+
+    // If configured, remove existing entries for this date before creating a new one
+    if (existingEntries.length > 0 && REPLACE_EXISTING) {
+      for (const entry of existingEntries) {
+        try {
+          console.log(
+            `Deleting existing time_entry ${entry.id} for ${date}...`
+          );
+          await axios.delete(
+            `${process.env.REDMINE_URL}/time_entries/${entry.id}.json`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "X-Redmine-API-Key": process.env.REDMINE_API_KEY,
+              },
+            }
+          );
+          console.log(`Deleted time_entry ${entry.id}`);
+        } catch (err) {
+          console.error(
+            `Failed to delete time_entry ${entry.id}:`,
+            err.response?.data || err.message
+          );
+        }
+      }
+    }
+
     console.log("Creating time entry for date:", date);
     try {
       const time_entry = {

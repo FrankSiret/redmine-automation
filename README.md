@@ -68,6 +68,9 @@ REDMINE_COMMENTS=Worked on feature implementation
 REDMINE_FROM_DATE=2025-08-01
 REDMINE_TO_DATE=2025-08-15
 
+# Optional: when true the script will delete existing time entries for the selected dates and create new ones
+REDMINE_REPLACE_EXISTING=true
+
 # Redmine activity ID to use for time entries (optional)
 # If omitted the script defaults to 9 (commonly "Development").
 REDMINE_ACTIVITY_ID=9
