@@ -49,31 +49,31 @@ npm install
 Create a `.env` file in the project root with:
 
 ```env
-# Redmine instance URL (no trailing slash)
+# Redmine instance URL (no trailing slash) (required)
 REDMINE_URL=https://www.redmine.org
 
-# Redmine credentials
+# Redmine credentials (required)
 REDMINE_API_KEY=your_redmine_api_key
 
 # Task or project ID (required)
 REDMINE_TASK_ID=1234
 
 # Default hours per day (optional, defaults to 8)
-REDMINE_HOURS=8
+# REDMINE_HOURS=8
 
 # Comments for each entry (optional)
-REDMINE_COMMENTS=Worked on feature implementation
+# REDMINE_COMMENTS=Worked on feature implementation
 
-# Date range (inclusive, format YYYY-MM-DD)
+# Date range (inclusive, format YYYY-MM-DD) (required)
 REDMINE_FROM_DATE=2025-08-01
 REDMINE_TO_DATE=2025-08-15
 
 # Optional: when true the script will delete existing time entries for the selected dates and create new ones
-REDMINE_REPLACE_EXISTING=true
+# REDMINE_REPLACE_EXISTING=true
 
 # Redmine activity ID to use for time entries (optional)
 # If omitted the script defaults to 9 (commonly "Development").
-REDMINE_ACTIVITY_ID=9
+# REDMINE_ACTIVITY_ID=9
 ```
 
 ---
