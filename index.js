@@ -1,3 +1,6 @@
+// main branch
+// This script creates time entries in Redmine for each weekday between the specified from and to dates.
+
 import axios from "axios";
 import dotenv from "dotenv";
 
