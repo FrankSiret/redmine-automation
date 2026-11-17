@@ -1,5 +1,7 @@
-// main branch
-// This script creates time entries in Redmine for each weekday between the specified from and to dates.
+// It checks for existing entries and can optionally replace them based on configuration.
+// Required environment variables:
+// - REDMINE_API_KEY: Your Redmine API key
+// - REDMINE_URL: Base URL of your Redmine instance (e.g., https://redmine.example.com)
 
 import axios from "axios";
 import dotenv from "dotenv";
