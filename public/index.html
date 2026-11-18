@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Horas Redmine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="top">
+        <nav class="month-nav" aria-label="Cambiar de mes">
+          <button id="prev-month" class="nav-btn" type="button" aria-label="Mes anterior" title="Mes anterior (←)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+          </button>
+          <button id="next-month" class="nav-btn" type="button" aria-label="Mes siguiente" title="Mes siguiente (→)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+          </button>
+          <h1 id="month-title" aria-live="polite"><span class="m"></span> <span class="y"></span></h1>
+          <button id="current-month" class="ghost" type="button">Ir al mes actual</button>
+        </nav>
+        <p id="who" class="muted"></p>
+      </header>
+
+      <section class="settings" aria-label="Valores para imputar">
+        <label class="field task-field">
+          <span>Tarea por defecto</span>
+          <input id="set-task" list="my-issues" inputmode="numeric" autocomplete="off" placeholder="Nº de tarea" />
+          <small id="task-subject" class="hint"></small>
+        </label>
+        <label class="field hours-field">
+          <span>Horas por día</span>
+          <input id="set-hours" type="number" min="0.25" max="24" step="0.25" />
+        </label>
+        <label class="field">
+          <span>Actividad</span>
+          <select id="set-activity"></select>
+        </label>
+        <label class="field grow">
+          <span>Comentario</span>
+          <input id="set-comments" autocomplete="off" placeholder="Opcional" />
+        </label>
+        <datalist id="my-issues"></datalist>
+      </section>
+
+      <section class="summary" aria-live="polite">
+        <p id="summary-text"></p>
+        <button id="fill-month" class="primary" type="button" hidden></button>
+      </section>
+
+      <div class="calendar" id="calendar">
+        <div class="weekdays" aria-hidden="true">
+          <span>lun</span><span>mar</span><span>mié</span><span>jue</span><span>vie</span><span>sáb</span><span>dom</span>
+        </div>
+        <div id="grid" class="grid"></div>
+      </div>
+
+      <ul class="legend" aria-label="Leyenda">
+        <li><i class="sw full"></i>Completo</li>
+        <li><i class="sw partial"></i>Parcial</li>
+        <li><i class="sw missing"></i>Sin horas</li>
+      </ul>
+    </main>
+
+    <p id="status" class="status" role="status" aria-live="polite" hidden></p>
+
+    <dialog id="day-dialog" aria-labelledby="day-title">
+      <div class="dialog-head">
+        <div>
+          <h2 id="day-title"></h2>
+          <p id="day-total" class="muted"></p>
+        </div>
+        <button id="close-dialog" class="nav-btn" type="button" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+        </button>
+      </div>
+      <ul id="day-entries" class="entries"></ul>
+      <form id="add-form" class="add-form">
+        <h3>Imputar horas</h3>
+        <label class="field">
+          <span>Horas</span>
+          <input name="hours" type="number" min="0.25" max="24" step="0.25" required />
+        </label>
+        <label class="field">
+          <span>Tarea</span>
+          <input name="issue" list="my-issues" inputmode="numeric" autocomplete="off" required />
+        </label>
+        <label class="field">
+          <span>Actividad</span>
+          <select name="activity"></select>
+        </label>
+        <label class="field wide">
+          <span>Comentario</span>
+          <input name="comments" autocomplete="off" placeholder="Opcional" />
+        </label>
+        <button class="primary wide" type="submit">Imputar horas</button>
+      </form>
+    </dialog>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

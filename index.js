@@ -16,8 +16,8 @@
 // - REDMINE_DRY_RUN: "true" to only print what would be done, without changing anything
 // - REDMINE_SKIP_DATES: Comma-separated dates to skip (holidays, vacations), e.g. 2025-12-25,2025-12-26
 
-import axios from "axios";
 import dotenv from "dotenv";
+import { createClient, describeError, fetchTimeEntries as fetchAllTimeEntries } from "./lib/redmine.js";
 
 dotenv.config({ quiet: true });
 
@@ -122,36 +122,12 @@ const getWeekdays = (fromDate, toDate) => {
   return dates;
 };
 
-const describeError = (err) => {
-  if (!err.response) return err.message;
-  const { status, data } = err.response;
-  const details = Array.isArray(data?.errors) ? `: ${data.errors.join("; ")}` : "";
-  return `HTTP ${status}${details}`;
-};
-
-const createClient = ({ url, apiKey }) =>
-  axios.create({
-    baseURL: url,
-    headers: { "X-Redmine-API-Key": apiKey },
-  });
-
 // ---------- Redmine operations ----------
 
 // Fetch all of the current user's time entries in the date range (follows pagination)
 const fetchTimeEntries = async (client, { from, to }) => {
   console.log(`Fetching your time entries between ${from} and ${to}...`);
-  const limit = 100;
-  const entries = [];
-  let offset = 0;
-  for (;;) {
-    const { data } = await client.get("/time_entries.json", {
-      params: { from, to, user_id: "me", limit, offset },
-    });
-    const page = data.time_entries ?? [];
-    entries.push(...page);
-    offset += page.length;
-    if (page.length === 0 || offset >= (data.total_count ?? 0)) break;
-  }
+  const entries = await fetchAllTimeEntries(client, { from, to });
   console.log(`Found ${entries.length} existing time entries.`);
   return entries;
 };
