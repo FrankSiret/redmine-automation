@@ -49,31 +49,37 @@ npm install
 Create a `.env` file in the project root with:
 
 ```env
-# Redmine instance URL (no trailing slash) (required)
+# Redmine instance URL (required)
 REDMINE_URL=https://www.redmine.org
 
 # Redmine credentials (required)
 REDMINE_API_KEY=your_redmine_api_key
 
-# Task or project ID (required)
+# Issue ID to log time on (required)
 REDMINE_TASK_ID=1234
-
-# Default hours per day (optional, defaults to 8)
-# REDMINE_HOURS=8
-
-# Comments for each entry (optional)
-# REDMINE_COMMENTS=Worked on feature implementation
 
 # Date range (inclusive, format YYYY-MM-DD) (required)
 REDMINE_FROM_DATE=2025-08-01
 REDMINE_TO_DATE=2025-08-15
 
-# Optional: when true the script will delete existing time entries for the selected dates and create new ones
+# Hours per day (optional, defaults to 8, max 24)
+# REDMINE_HOURS=8
+
+# Redmine activity ID to use for time entries (optional, defaults to 9, commonly "Development")
+# REDMINE_ACTIVITY_ID=9
+
+# Comments for each entry (optional)
+# REDMINE_COMMENTS=Worked on feature implementation
+
+# Optional: when true, existing entries on REDMINE_TASK_ID for the selected dates are deleted
+# and recreated. Entries logged on other issues are never deleted.
 # REDMINE_REPLACE_EXISTING=true
 
-# Redmine activity ID to use for time entries (optional)
-# If omitted the script defaults to 9 (commonly "Development").
-# REDMINE_ACTIVITY_ID=9
+# Optional: when true, only prints what would be created/deleted without changing anything
+# REDMINE_DRY_RUN=true
+
+# Optional: comma-separated dates to skip (holidays, vacations)
+# REDMINE_SKIP_DATES=2025-08-15,2025-12-25
 ```
 
 ---
@@ -83,28 +89,40 @@ REDMINE_TO_DATE=2025-08-15
 Run the script:
 
 ```bash
+npm start
+# or
 node index.js
 ```
 
+Tip: run it first with `REDMINE_DRY_RUN=true` to check what it will do.
+
 The script will:
 
-1. Generate all weekdays between `REDMINE_FROM_DATE` and `REDMINE_TO_DATE`.
-2. For each date, create a **time entry** in Redmine with:
+1. Validate the configuration (required variables, dates, numbers) and stop with a clear error if something is wrong.
+2. Fetch all your time entries in the date range (following pagination).
+3. For each weekday between `REDMINE_FROM_DATE` and `REDMINE_TO_DATE`:
 
-   - `issue_id` (or project_id if adapted)
-   - `hours` worked
-   - `activity_id` (set to `9` in the script, usually “Development”)
-   - `comments` (if provided)
-   - `spent_on` date
+   - Skip it if it is listed in `REDMINE_SKIP_DATES`.
+   - Skip it if you already logged time on **another** issue or project that day.
+   - Skip it if you already logged time on `REDMINE_TASK_ID`, unless `REDMINE_REPLACE_EXISTING=true`, in which case those entries are deleted and recreated (if a deletion fails, no new entry is created).
+   - Otherwise create a **time entry** with `issue_id`, `hours`, `activity_id`, `comments` and `spent_on`.
+
+4. Print a summary. The process exits with code `1` if any operation failed.
 
 ---
 
 ## 📝 Example Output
 
 ```bash
-Creating time entry for date: 2025-08-01
-Issue created: { "time_entry": { "id": 101, ... } }
-Creating time entry for date: 2025-08-04
-Issue created: { "time_entry": { "id": 102, ... } }
+Fetching your time entries between 2025-08-01 and 2025-08-08...
+Found 1 existing time entries.
+2025-08-01:
+  Created time entry #101 (8h) for 2025-08-01
+2025-08-04:
+  Already has time logged on issue #1234. Skipping.
+2025-08-05:
+  Created time entry #102 (8h) for 2025-08-05
 ...
+
+Done. Created: 5, deleted: 0, skipped: 1, failed: 0
 ```
